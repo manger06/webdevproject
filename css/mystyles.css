@@ -1,0 +1,33 @@
+body{
+    background-color:gainsboro;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+h1{
+    font-weight: bold;
+    font-size: 30px;
+}
+
+p{
+    color: navy;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;}
+
+.centerlist{
+    padding-left: 0;
+    list-style-position: outside;
+    margin: 0 auto;
+    text-align: center;}
+
+.boldtext{
+    font-weight: bold;
+}
+
+.normaltext{
+    font-weight: 200;
+}

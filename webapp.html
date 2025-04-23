@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soccer Shot Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #7ec850;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: white;
+      margin-top: 20px;
+    }
+
+    #gameArea {
+      margin: 30px auto;
+      width: 400px;
+      height: 500px;
+      background: #ffffff;
+      border: 5px solid #444;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #goalkeeper {
+      width: 100px;
+      height: 40px;
+      background: red;
+      position: absolute;
+      top: 50px;
+      left: 150px;
+      z-index: 1;
+      transition: left 0.2s;
+    }
+
+    #ball {
+      width: 30px;
+      height: 30px;
+      background: blue;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 20px;
+      left: 185px;
+      z-index: 2;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: navy;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #result, #score {
+      font-size: 24px;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .control-buttons {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Soccer Shot!</h1>
+  <div id="gameArea">
+    <div id="goalkeeper"></div>
+    <div id="ball"></div>
+  </div>
+  <div class="control-buttons">
+    <button onclick="takeShot('left')">Shoot Left</button>
+    <button onclick="takeShot('center')">Shoot Center</button>
+    <button onclick="takeShot('right')">Shoot Right</button>
+  </div>
+  <div id="score">Score: 0 - 0</div>
+  <div id="result"></div>
+
+  <script>
+    const goalkeeper = document.getElementById("goalkeeper");
+    const result = document.getElementById("result");
+    const ball = document.getElementById("ball");
+    const scoreDisplay = document.getElementById("score");
+
+    let playerScore = 0;
+    let keeperScore = 0;
+    let gameOver = false;
+
+    function randomPosition() {
+      return Math.floor(Math.random() * 301); // max left: 400 - 100 (goalkeeper width)
+    }
+
+    function getShotX(direction) {
+      switch(direction) {
+        case 'left': return 60;
+        case 'center': return 185;
+        case 'right': return 310;
+      }
+    }
+
+    function updateScore() {
+      scoreDisplay.innerText = `Score: ${playerScore} - ${keeperScore}`;
+    }
+
+    function checkWinner() {
+      if (playerScore >= 5) {
+        result.innerText = "🏆 You win!";
+        gameOver = true;
+      } else if (keeperScore >= 5) {
+        result.innerText = "🧤 Keeper wins! Try again.";
+        gameOver = true;
+      }
+    }
+
+    function takeShot(direction) {
+      if (gameOver) return;
+
+      const keeperPos = randomPosition();
+      goalkeeper.style.left = keeperPos + "px";
+
+      const shotX = getShotX(direction);
+      ball.style.left = shotX + "px";
+      ball.style.transition = "bottom 0.5s";
+      ball.style.bottom = "480px";
+
+      setTimeout(() => {
+        const isSaved = shotX > keeperPos - 10 && shotX < keeperPos + 110;
+
+        if (isSaved) {
+          result.innerText = "❌ SAVED by the goalkeeper!";
+          keeperScore++;
+        } else {
+          result.innerText = "⚽️ GOAL!!!";
+          playerScore++;
+        }
+
+        updateScore();
+        checkWinner();
+
+        setTimeout(() => {
+          if (!isSaved) {
+            ball.style.transition = "none";
+            ball.style.bottom = "20px";
+            ball.style.left = "185px";
+          }
+        }, 400);
+      }, 600);
+    }
+  </script>
+</body>
+</html>
